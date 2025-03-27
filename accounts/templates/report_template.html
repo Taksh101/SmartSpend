@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expense Report</title>
+    <style>
+        @page { size: A4; margin: 20px; }
+        body { font-family: 'Arial', sans-serif; padding: 10px; }
+        h1, h3 { text-align: center; color: #333; }
+        p { font-size: 14px; margin: 5px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid black; padding: 8px; text-align: left; font-size: 14px; }
+        th { background-color: #f2f2f2; }
+        .total { font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>SmartSpend Expense Report</h1>
+    <h3>Generated for: {{ user.first_name }} {{ user.last_name }}</h3>
+    <p><strong>Generated on:</strong> {{ generated_date }}</p>
+    <p><strong>Total Expenses:</strong> ₹{{ total_amount }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sr No.</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Amount (₹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ expense.date }}</td>
+                <td>{{ expense.category }}</td>
+                <td>₹{{ expense.amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

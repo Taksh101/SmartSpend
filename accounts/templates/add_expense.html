@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense - SmartSpend</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Remove arrows in Chrome, Safari, Edge */
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    
+        /* Remove arrows in Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">SmartSpend</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'add_expense' %}">Add Expense</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'manage_expense' %}">Manage Expenses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'manage_expense' %}">Insights</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'download_report' %}">Download Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Add Expense Form -->
+    <div class="container my-4 flex-grow-1">
+        <h2 class="text-center mb-4">Add New Expense</h2>
+        <div class="col-md-6 mx-auto">
+            <form method="POST" action="{% url 'add_expense' %}">
+                {% csrf_token %}
+
+                <!-- Title Field -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title"
+                        value="{{ request.POST.title }}" required>
+                    {% if errors.title %}
+                        <div class="text-danger">{{ errors.title }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Description Field -->
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="1" required>{{ request.POST.description }}</textarea>
+                    {% if errors.description %}
+                        <div class="text-danger">{{ errors.description }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Amount Field -->
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Amount (₹)</label>
+                    <input type="number" class="form-control" id="amount" name="amount" step="0"
+                        value="{{ request.POST.amount }}" required>
+                    {% if errors.amount %}
+                        <div class="text-danger">{{ errors.amount }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Date Field -->
+                <div class="mb-3">
+                    <label for="date" class="form-label">Date of Expense</label>
+                    <input type="date" class="form-control" id="date" name="date"
+                        value="{{ request.POST.date|default:current_date }}" required>
+                    {% if errors.date %}
+                        <div class="text-danger">{{ errors.date }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Category Field -->
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select class="form-select" id="category" name="category" required>
+                        {% for cat in categories %}
+                            <option value="{{ cat }}" {% if request.POST.category == cat %}selected{% endif %}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Add Expense</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+        <div class="container">
+            <p class="mb-0">&copy; 2025 SmartSpend | All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const amountInput = document.getElementById('amount');
+    
+            amountInput.addEventListener('keydown', function (event) {
+                // Prevent up (38) and down (40) arrow key actions
+                if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
