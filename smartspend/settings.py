@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-$_pw2#fx5pa1r2a90896#pguq(*^6rl3*5q2*ue6&fd_2h6v9g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["smartspend-production.up.railway.app","*"]
+ALLOWED_HOSTS = ["*"]
 LOGIN_URL = 'login'
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
