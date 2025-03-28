@@ -353,9 +353,9 @@ def generate_pdf(request):
     response["Content-Disposition"] = 'attachment; filename="SmartSpend_Report.pdf"'
 
     # Fix: Load font using settings.BASE_DIR
-    font_path = r"D:\SmartSpend\Yug Project Final\smartspend\accounts\fonts\DejaVuSans.ttf"
-
-    pdfmetrics.registerFont(TTFont("DejaVu", font_path))
+    
+    font_path = os.path.join(settings.BASE_DIR, 'accounts', 'fonts', 'DejaVuSans.ttf')
+    pdfmetrics.registerFont(TTFont('DejaVuSans', font_path))
 
     doc = SimpleDocTemplate(response, pagesize=A4)
     elements = []
