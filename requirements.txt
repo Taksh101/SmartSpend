@@ -133,3 +133,6 @@ Werkzeug==2.0.2
 widgetsnbextension==4.0.13
 xhtml2pdf==0.2.16
 zopfli==0.2.3.post1
+gunicorn
+Django
+psycopg2
