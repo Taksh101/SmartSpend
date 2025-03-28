@@ -332,13 +332,6 @@ def download_report(request):
     expenses = Expense.objects.filter(user=request.user).order_by('-date')
     return render(request, "download_report.html", {"expenses": expenses})
 
-
-
-
-
-
-
-
 @login_required
 def generate_pdf(request):
     expenses = Expense.objects.filter(user=request.user).order_by('-date')
@@ -352,8 +345,7 @@ def generate_pdf(request):
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = 'attachment; filename="SmartSpend_Report.pdf"'
 
-    # Fix: Load font using settings.BASE_DIR
-    
+    # Load font using settings.BASE_DIR
     font_path = os.path.join(settings.BASE_DIR, 'accounts', 'fonts', 'DejaVuSans.ttf')
     pdfmetrics.registerFont(TTFont('DejaVuSans', font_path))
 
@@ -379,14 +371,14 @@ def generate_pdf(request):
     title_table = Table(title, colWidths=[5 * inch])
     title_table.setStyle(TableStyle([
         ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-        ("FONTNAME", (0, 0), (-1, -1), "DejaVu"),
+        ("FONTNAME", (0, 0), (-1, -1), "DejaVuSans"),  # Fixed here
         ("FONTSIZE", (0, 0), (-1, -1), 18),
     ]))
 
     summary_table = Table(summary, colWidths=[5 * inch])
     summary_table.setStyle(TableStyle([
         ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-        ("FONTNAME", (0, 0), (-1, -1), "DejaVu"),
+        ("FONTNAME", (0, 0), (-1, -1), "DejaVuSans"),  # Fixed here
         ("FONTSIZE", (0, 0), (-1, -1), 12),
     ]))
 
@@ -395,7 +387,7 @@ def generate_pdf(request):
         ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
         ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
         ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-        ("FONTNAME", (0, 0), (-1, -1), "DejaVu"),
+        ("FONTNAME", (0, 0), (-1, -1), "DejaVuSans"),  # Fixed here
         ("FONTSIZE", (0, 0), (-1, -1), 10),
         ("BOTTOMPADDING", (0, 0), (-1, 0), 6),
         ("GRID", (0, 0), (-1, -1), 1, colors.black),
