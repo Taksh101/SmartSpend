@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "nixpacks",
+    "plan": {
+      "pkgs": ["python310"],
+      "start": "gunicorn smartspend.wsgi:application --bind 0.0.0.0:$PORT"
+    }
+  }
+}
