@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body class="d-flex flex-column min-vh-100">
-
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'home' %}">SmartSpend</a>
@@ -32,30 +30,25 @@
     </div>
 </nav>
 
-<!-- Main Content -->
 <div class="container flex-grow-1 d-flex flex-column justify-content-center">
     {% if expenses %}
-    <!-- Hero Section -->
     <div class="text-center mt-5">
         <h1 class="fw-bold text-dark">Generate Your Expense Report</h1>
         <p class="text-muted fs-5">Keep track of your financial habits and manage expenses effectively.</p>
         <img src="https://cdn-icons-png.flaticon.com/512/337/337946.png" alt="Report Image" class="img-fluid my-4" style="max-width: 200px; margin-right: 20px;">
     </div>
 
-    <!-- Download Section -->
     <div class="text-center mt-3">
         <a href="{% url 'generate_pdf' %}" class="btn btn-lg btn-primary">
             <i class="bi bi-download"></i> Download PDF
         </a>
     </div>
 
-    <!-- Tagline Section -->
     <div class="text-center mt-5">
         <p class="fs-5 text-secondary">Download your report and take control of your spending habits!</p>
     </div>
 
     {% else %}
-    <!-- No Data Message -->
     <div class="d-flex flex-column align-items-center justify-content-center" style="height: 60vh;">
         <img src="https://cdn-icons-png.flaticon.com/512/4076/4076432.png" alt="No Data" class="img-fluid" style="max-width: 350px;">
         <h2 class="mt-4 fw-bold text-dark text-center">Not enough data to generate a report. Add expenses to download.</h2>

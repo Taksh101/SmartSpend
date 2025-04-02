@@ -36,17 +36,14 @@ def signup_view(request):
 
         errors = {}
 
-        # Username validation
         if len(username) < 6:
             errors['username'] = 'Username must be at least 6 characters long.'
         elif User.objects.filter(username=username).exists():
             errors['username'] = 'Username already exists.'
 
-        # Email validation
         if User.objects.filter(email=email).exists():
             errors['email'] = 'Email address already exists.'
 
-        # Password validations
         if password1 != password2:
             errors['password_mismatch'] = 'Passwords do not match.'
         
@@ -58,7 +55,6 @@ def signup_view(request):
             errors['password_strength'] = 'Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one digit, and one special character.'
 
         if errors:
-            # Preserve form data (excluding passwords)
             form_data = {
                 'first_name': first_name,
                 'last_name': last_name,
@@ -67,7 +63,6 @@ def signup_view(request):
             }
             return render(request, 'signup.html', {'errors': errors, 'form_data': form_data})
 
-        # Create the user if no errors
         user = User.objects.create_user(
             first_name=first_name,
             last_name=last_name,
@@ -82,8 +77,8 @@ def signup_view(request):
 
 @never_cache
 def logout_view(request):
-    logout(request)  # Logs out the user
-    return redirect('landing')  # Redirects to the landing page after logout
+    logout(request)  
+    return redirect('landing')  
 
 
 def landing_view(request):
@@ -94,16 +89,12 @@ def landing_view(request):
 @never_cache
 @login_required(login_url='login')
 def home(request):
-    # Get all expenses for the logged-in user
     expenses = Expense.objects.filter(user=request.user)
 
-    # Total Expenses
     total_expenses = expenses.aggregate(total=Sum('amount'))['total'] or 0
 
-    # Total Transactions
     total_transactions = expenses.count()
 
-    # Most Spent On Category Logic
     most_spent_category = 'N/A'
     category_data = (
         expenses.values('category')
@@ -113,7 +104,6 @@ def home(request):
     if category_data:
         most_spent_category = category_data[0]['category']
 
-    # Current Month Spending
     current_month = timezone.now().month
     current_year = timezone.now().year
     current_month_spending = (
@@ -139,18 +129,16 @@ def login_view(request):
 
         errors = {}
 
-        # Check for empty fields
         if not username:
             errors['username'] = 'Username is required.'
         if not password:
             errors['password'] = 'Password is required.'
 
         if not errors:
-            # Authenticate the user
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                login(request, user)  # Log the user in
-                return redirect('home')  # Redirect to home page after successful login
+                login(request, user)  
+                return redirect('home') 
             else:
                 errors['invalid'] = 'Invalid username or password.'
 
@@ -176,7 +164,6 @@ def add_expense(request):
         category = request.POST.get('category', '')
         date = request.POST.get('date', current_date)
 
-        # Validations
         if not (5 <= len(title) <= 50):
             errors['title'] = 'Title must be between 5 and 50 characters.'
 
@@ -196,7 +183,6 @@ def add_expense(request):
         if category not in categories:
             errors['category'] = 'Invalid category selected.'
 
-        # Save Expense if no errors
         if not errors:
             Expense.objects.create(
                 user=request.user,
@@ -206,7 +192,7 @@ def add_expense(request):
                 category=category,
                 date=date
             )
-            return redirect(f"{reverse('home')}?success=1")  # Add success parameter
+            return redirect(f"{reverse('home')}?success=1")
 
     return render(request, 'add_expense.html', {
         'errors': errors,
@@ -217,10 +203,7 @@ def add_expense(request):
 @login_required
 def manage_expense(request):
     user_expenses = Expense.objects.filter(user=request.user).order_by('-date')
-
-    # Apply pagination
-
-    paginator = Paginator(user_expenses, 5)  # Show 5 transactions per page
+    paginator = Paginator(user_expenses, 5)  
     page_number = request.GET.get('page')
     expenses_page = paginator.get_page(page_number)
     print("Total Pages:", paginator.num_pages)
@@ -229,7 +212,7 @@ def manage_expense(request):
     print("Has Previous:", expenses_page.has_previous())
 
     errors = {}
-    success_message = request.GET.get('success', None)  # Get success message from URL parameters
+    success_message = request.GET.get('success', None) 
     current_date = timezone.now().date().isoformat()
     categories = ['Food', 'Transport', 'Shopping', 'Entertainment', 'Health', 'Education', 'Utilities', 'Others']
 
@@ -244,7 +227,6 @@ def manage_expense(request):
         category = request.POST.get('category', '')
         date = request.POST.get('date', current_date)
 
-        # Validations
         if not (5 <= len(title) <= 50):
             errors['title'] = 'Title must be between 5 and 50 characters.'
 
@@ -264,7 +246,6 @@ def manage_expense(request):
         if category not in categories:
             errors['category'] = 'Invalid category selected.'
 
-        # Update only if no errors
         if not errors:
             expense.title = title
             expense.description = description
@@ -274,7 +255,6 @@ def manage_expense(request):
             expense.save()
             return redirect(f"{request.path}?success=Expense updated successfully!")
 
-    # Delete Expense Logic
     if request.method == 'POST' and 'delete_expense_id' in request.POST:
         expense_id = request.POST.get('delete_expense_id')
         expense = get_object_or_404(Expense, id=expense_id, user=request.user)
@@ -291,32 +271,22 @@ def manage_expense(request):
 
 @login_required
 def insights(request):
-    # Get user expenses
     expenses = Expense.objects.filter(user=request.user)
     category_labels = []
     category_values = []
     monthly_labels = []
     monthly_values = []
-    # Category-wise Expense Data
     category_data = expenses.values('category').annotate(total=Sum('amount'))
     category_labels = list(category_data.values_list('category', flat=True))
-    category_values = [float(item['total']) for item in category_data]  # Convert Decimal to float
-
-    # Get the current year
+    category_values = [float(item['total']) for item in category_data] 
     current_year = datetime.now().year
-
-    # Ensure all months (Jan–Dec) appear even if expense is 0
     full_months = {datetime(current_year, i, 1).strftime('%b %Y'): 0 for i in range(1, 13)}
-
-    # Populate with actual expense data
     for item in expenses.values('date__year', 'date__month').annotate(total=Sum('amount')):
         month_label = datetime(item['date__year'], item['date__month'], 1).strftime('%b %Y')
         full_months[month_label] = float(item['total'])  
-
-    # Convert data for template
     monthly_labels = list(full_months.keys())
     monthly_values = list(full_months.values())
-    if monthly_values == [0] * 12:  # Check if all values are zero
+    if monthly_values == [0] * 12: 
         monthly_values = []
     context = {
         'category_labels': json.dumps(category_labels),  
@@ -345,7 +315,6 @@ def generate_pdf(request):
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = 'attachment; filename="SmartSpend_Report.pdf"'
 
-    # Load font using settings.BASE_DIR
     font_path = os.path.join(settings.BASE_DIR, 'accounts', 'fonts', 'DejaVuSans.ttf')
     pdfmetrics.registerFont(TTFont('DejaVuSans', font_path))
 
@@ -371,14 +340,14 @@ def generate_pdf(request):
     title_table = Table(title, colWidths=[5 * inch])
     title_table.setStyle(TableStyle([
         ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-        ("FONTNAME", (0, 0), (-1, -1), "DejaVuSans"),  # Fixed here
+        ("FONTNAME", (0, 0), (-1, -1), "DejaVuSans"),  
         ("FONTSIZE", (0, 0), (-1, -1), 18),
     ]))
 
     summary_table = Table(summary, colWidths=[5 * inch])
     summary_table.setStyle(TableStyle([
         ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-        ("FONTNAME", (0, 0), (-1, -1), "DejaVuSans"),  # Fixed here
+        ("FONTNAME", (0, 0), (-1, -1), "DejaVuSans"),  
         ("FONTSIZE", (0, 0), (-1, -1), 12),
     ]))
 
@@ -387,7 +356,7 @@ def generate_pdf(request):
         ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
         ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
         ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-        ("FONTNAME", (0, 0), (-1, -1), "DejaVuSans"),  # Fixed here
+        ("FONTNAME", (0, 0), (-1, -1), "DejaVuSans"),  
         ("FONTSIZE", (0, 0), (-1, -1), 10),
         ("BOTTOMPADDING", (0, 0), (-1, 0), 6),
         ("GRID", (0, 0), (-1, -1), 1, colors.black),
