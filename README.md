@@ -1,6 +1,6 @@
 # 💰 SmartSpend - Expense Tracker  
 
-[![SmartSpend](https://img.shields.io/badge/Live%20Demo-Click%20Here-brightgreen?style=flat&logo=railway)](https://smartspend-production.up.railway.app/)  
+[![SmartSpend](https://smartspend-swkl.onrender.com/)
 
 SmartSpend is a simple and intuitive expense tracker that helps users manage their daily spending efficiently.  
 
@@ -11,7 +11,7 @@ SmartSpend is a simple and intuitive expense tracker that helps users manage the
 ✅ **Download Reports** – Export expense reports as PDFs  
 
 ## 🌐 Live Demo  
-🔗 **Try it now:** [SmartSpend](https://smartspend-production.up.railway.app/)  
+🔗 **Try it now:** [SmartSpend](https://smartspend-swkl.onrender.com/)
 
 ## 🛠️ Technologies Used  
 - **Frontend:** HTML, Bootstrap  
