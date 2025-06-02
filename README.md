@@ -1,6 +1,6 @@
 # 💰 SmartSpend - Expense Tracker  
 
-[![SmartSpend](https://smartspend-swkl.onrender.com/)
+🔗 **Live Site:** [https://smartspend-swkl.onrender.com](https://smartspend-swkl.onrender.com)
 
 SmartSpend is a simple and intuitive expense tracker that helps users manage their daily spending efficiently.  
 
@@ -11,7 +11,7 @@ SmartSpend is a simple and intuitive expense tracker that helps users manage the
 ✅ **Download Reports** – Export expense reports as PDFs  
 
 ## 🌐 Live Demo  
-🔗 **Try it now:** [SmartSpend](https://smartspend-swkl.onrender.com/)
+🔗 **Try it now:** [SmartSpend](https://smartspend-swkl.onrender.com)
 
 ## 🛠️ Technologies Used  
 - **Frontend:** HTML, Bootstrap  
@@ -19,5 +19,3 @@ SmartSpend is a simple and intuitive expense tracker that helps users manage the
 - **Database:** SQLite  
 - **Data Visualization:** Chart.js  
 - **PDF Reports:** ReportLab  
-
----
